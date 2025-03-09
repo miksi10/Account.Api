@@ -18,13 +18,15 @@ namespace Account.Api.Controllers
         #region Private fields
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ILogger<AccountController> _logger;
         #endregion
 
         #region Public constructor
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
         #endregion
 
@@ -57,14 +59,16 @@ namespace Account.Api.Controllers
 
                     if (loginResponse.Data == null)
                     {
+                        _logger.LogInformation("[AccountController] - Login failed: {@Type}: ", MessageType.Error.ToString());
                         loginResponse.Message = new CommandMessage() { Text = "Failed to generate token", Type = MessageType.Error.ToString() };
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 loginResponse.Success = false;
                 loginResponse.Message = new CommandMessage() { Text = "Login failed", Type = MessageType.Error.ToString() };
+                _logger.LogError(ex, "[AccountController] - Login failed : {@accountRequest}", accountRequest);
             }
 
             return Ok(loginResponse);
@@ -98,6 +102,7 @@ namespace Account.Api.Controllers
             {
                 registerResponse.Success = false;
                 registerResponse.Message = new CommandMessage() { Text = accountType.ToString() + " registration failed", Type = MessageType.Error.ToString() };
+                _logger.LogError(ex, "[AccountController] - Register error : {@accountRequest} and {@accountType}", accountRequest, accountType);
             }
 
             return registerResponse;
