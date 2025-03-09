@@ -125,7 +125,7 @@ namespace Account.Api.Controllers
 
             var expiration = DateTime.UtcNow.AddHours(1);
             JwtSecurityToken token = new JwtSecurityToken(
-               issuer: null,
+               issuer: "https://world.of.gamecraft.rs/Account.Api",
                audience: null,
                claims: claims,
                expires: expiration,
