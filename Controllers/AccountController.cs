@@ -97,6 +97,12 @@ namespace Account.Api.Controllers
                         };
                     }
                 }
+                else
+                {
+                    registerResponse.Success = false;
+                    registerResponse.Message = new CommandMessage() { Text = accountType.ToString() + " registration failed", Type = MessageType.Error.ToString() };
+                }
+
             }
             catch (Exception ex)
             {
