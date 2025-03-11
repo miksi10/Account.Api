@@ -15,11 +15,15 @@ namespace Account.Api.DbContext
 
                     if (context != null)
                     {
+                        //context.Database.EnsureDeleted();
                         context.Database.Migrate();
                     }
 
                     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+                    //some test data
+                    //if already exists, code will go to catch block because test data is already inserted
+                    //Api will be started normally, even if that happens
                     if (roleManager != null)
                     {
                         var userRole = roleManager.CreateAsync(new IdentityRole("User")).Result;
